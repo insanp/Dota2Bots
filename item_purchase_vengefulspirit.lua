@@ -17,7 +17,7 @@ local tableItemsToBuy = {
 				"item_ultimate_scepter"
 			};
 
-print(pcall(require, "bots/item_purchase_utility" ))
+print(pcall(require, "bots/utility/item_purchase" ))
 
 ----------------------------------------------------------------------------------------------------
 

@@ -26,7 +26,7 @@ local tableItemsToBuy = {
 				"item_cyclone",
 			};
 
-pcall(require, "bots/item_purchase_utility" )
+pcall(require, "bots/utility/item_purchase" )
 
 ----------------------------------------------------------------------------------------------------
 

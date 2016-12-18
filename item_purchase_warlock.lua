@@ -20,7 +20,7 @@ local tableItemsToBuy = {
 				"item_refresher"
 			};
 
-pcall(require, "bots/item_purchase_utility" )
+pcall(require, "bots/utility/item_purchase" )
 
 ----------------------------------------------------------------------------------------------------
 
