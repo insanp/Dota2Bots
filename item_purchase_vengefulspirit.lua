@@ -12,7 +12,7 @@ local tableItemsToBuy = {
 				"item_recipe_force_staff",
 				"item_mithril_hammer",
 				"item_mithril_hammer",
-				"item_desolator",
+				"item_recipe_desolator",
 				"item_point_booster",
 				"item_ultimate_scepter"
 			};

@@ -14,12 +14,12 @@ local tableItemsToBuy = {
 				"item_staff_of_wizardry",
 				"item_ogre_axe",
 				"item_blade_of_alacrity",
-				"item_ultimate_orb",
 				"item_blade_of_alacrity",
 				"item_boots_of_elves",
+				"item_reaver",
+				"item_mithril_hammer",
+				"item_ultimate_orb",
 				"item_recipe_manta",
-				"item_satanic",
-				"item_black_king_bar"
 			};
 
 pcall(require, "bots/utility/item_purchase" )

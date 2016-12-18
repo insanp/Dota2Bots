@@ -1,6 +1,6 @@
 local flashMessage = true;
-local sideShopThreshold = 3000;
-local secretShopThreshold = 5000;
+local sideShopThreshold = 4000;
+local secretShopThreshold = 4000;
 
 local sideShopLocationTop = Vector(-7000, 4500);
 local sideShopLocationBot = Vector(7000, -4500);
@@ -61,7 +61,7 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
       flashMessage = false;
     end
 
-    if ( IsItemPurchasedFromSecretShop( sNextItem ) ) then
+    if ( IsItemPurchasedFromSecretShop( sNextItem ) and npcBot:DistanceFromSecretShop() <= secretShopThreshold ) then
       -- this item is from secret shop
       if ( GetTeam() == TEAM_RADIANT ) then
         npcBot:Action_MoveToLocation(secretShopLocationRadiant);
@@ -82,6 +82,15 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
   else
     flashMessage = false;
   end
+
+  if ( npcBot:GetGold() >= GetItemCost( 'item_tpscroll' ) ) then
+    -- buy at least one scroll from side shop
+    for i=1,6 do
+      if ( npcBot:GetItemInSlot(i) == 'item_tpscroll')
+      return
+    end
+    ItemPurchaseBot( npcBot, 'item_tpscroll', nil );
+  end
 end
 
 function ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy)
@@ -93,4 +102,7 @@ function ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy)
   end
 
   flashMessage = true;
+end
+
+function ItemSellBot( npcBot, sNextItem, tableItemsToBuy )
 end

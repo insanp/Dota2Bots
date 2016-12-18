@@ -13,13 +13,13 @@ local tableItemsToBuy = {
 				"item_sobi_mask",
 				"item_robe",
 				"item_ogre_axe",
-				"item_mithril_hammer",
-				"item_mithril_hammer",
-				"item_desolator",
 				"item_point_booster",
 				"item_ogre_axe",
 				"item_staff_of_wizardry",
-				"item_blade_of_alacrity"
+				"item_blade_of_alacrity",
+				"item_mithril_hammer",
+				"item_mithril_hammer",
+				"item_recipe_desolator"
 			};
 
 pcall(require, "bots/utility/item_purchase" )

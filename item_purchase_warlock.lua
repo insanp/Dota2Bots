@@ -1,4 +1,5 @@
 local tableItemsToBuy = {
+				"item_courier",
 				"item_ring_of_protection",
 				"item_tango",
 				"item_clarity",
@@ -6,6 +7,7 @@ local tableItemsToBuy = {
 				"item_branches",
 				"item_circlet",
 				"item_magic_stick",
+				"item_sobi_mask",
 				"item_boots",
 				"item_energy_booster",
 				"item_arcane_boots",
@@ -15,7 +17,7 @@ local tableItemsToBuy = {
 				"item_blade_of_alacrity",
 				"item_platemail",
 				"item_mystic_staff",
-				"item_shivas_guard",
+				"item_recipe_shivas_guard",
 				"item_guardian_greaves",
 				"item_refresher"
 			};
