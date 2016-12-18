@@ -11,10 +11,12 @@ local tableItemsToBuy = {
 				"item_ring_of_health",
 				"item_vitality_booster",
 				"item_blink",
-				"item_blade_mail",
-				"item_point_booster",
-				"item_ultimate_scepter",
-				"item_black_king_bar"
+				"item_chainmail",
+				"item_broadsword",
+				"item_robe",
+				"item_reaver",
+				"item_vitality_booster",
+				"item_recipe_heart"
 			};
 
 pcall(require, "bots/utility/item_purchase" )
