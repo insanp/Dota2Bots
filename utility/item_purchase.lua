@@ -83,9 +83,10 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
     flashMessage = false;
   end
 
-  if ( npcBot:GetGold() >= GetItemCost( 'item_tpscroll' ) ) then
+  if ( npcBot:GetGold() >= GetItemCost( 'item_tpscroll' ) and npcBot:DistanceFromSideShop() <= 300 ) then
     -- buy at least one scroll from side shop
     for i=1,6 do
+      print (npcBot:GetItemInSlot(i))
       if ( npcBot:GetItemInSlot(i) == 'item_tpscroll') then
          return
       end
