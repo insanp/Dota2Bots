@@ -19,6 +19,17 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
 
   local sNextItem = tableItemsToBuy[1];
 
+  --[[ if (string.find( sNextItem, "sell")) then
+    local _, sellItem = sNextItem:match("([^,]+);([^,]+)");
+    if ( npcBot:DistanceFromSideShop() <= 300 or
+         npcBot:DistanceFromSecretShop() <= 100 or
+         npcBot:DistanceFromFountain() <= 300) then
+           ItemSellBot( npcBot, sellItem, tableItemsToBuy );
+    end
+    return;
+  end
+  ]]
+
   npcBot:SetNextItemPurchaseValue( GetItemCost( sNextItem ) );
 
   if ( npcBot:GetGold() >= GetItemCost( sNextItem ) )
@@ -117,4 +128,13 @@ function ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy)
 end
 
 function ItemSellBot( npcBot, sNextItem, tableItemsToBuy )
+  --[[ npcBot:Action_SellItem( sNextItem );
+  print( npcBot:GetUnitName() .. ' sells ' .. sNextItem );
+
+  if ( tableItemsToBuy ) then
+    table.remove( tableItemsToBuy, 1 );
+  end
+
+  flashMessage = true;
+  ]]
 end
