@@ -101,8 +101,8 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
     -- if no scrolls then
     -- ItemPurchaseBot( npcBot, 'item_tpscroll', nil );
     -- end
+    --]]
   end
-  ]]--
 end
 
 function ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy)
