@@ -83,16 +83,26 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
     flashMessage = false;
   end
 
-  if ( npcBot:GetGold() >= GetItemCost( 'item_tpscroll' ) and npcBot:DistanceFromSideShop() <= 300 ) then
-    -- buy at least one scroll from side shop
-    for i=1,6 do
-      print (npcBot:GetItemInSlot(i))
-      if ( npcBot:GetItemInSlot(i) == 'item_tpscroll') then
-         return
+  if ( npcBot:GetGold() >= GetItemCost( 'item_tpscroll' ) ) then
+    --[[ buy at least one scroll from shop
+    for i=0,5 do
+      local tempItemSlot = npcBot:GetItemInSlot( i );
+      if ( tempItemSlot ) then
+        print( "Slot " .. i .. " is occupied ");
+        print(#tempItemSlot);
+        for k,v in ipairs(tempItemSlot) do
+          print(k,v)
+        end
+        -- if item is scroll, then break
+      else
+        print( "Slot " .. i .. " is empty ");
       end
     end
-    ItemPurchaseBot( npcBot, 'item_tpscroll', nil );
+    -- if no scrolls then
+    -- ItemPurchaseBot( npcBot, 'item_tpscroll', nil );
+    -- end
   end
+  ]]--
 end
 
 function ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy)
