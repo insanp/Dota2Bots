@@ -1,6 +1,7 @@
 local flashMessage = true;
 local sideShopThreshold = 4000;
 local secretShopThreshold = 4000;
+local distanceBuyShop = 300;
 
 local sideShopLocationTop = Vector(-7000, 4500);
 local sideShopLocationBot = Vector(7000, -4500);
@@ -57,7 +58,7 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
           else
             npcBot:Action_MoveToLocation(sideShopLocationBot);
           end
-          if ( npcBot:DistanceFromSideShop() <= 300 ) then
+          if ( npcBot:DistanceFromSideShop() <= distanceBuyShop ) then
             ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy );
           end
         end
@@ -79,7 +80,7 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
       else
         npcBot:Action_MoveToLocation(secretShopLocationDire);
       end
-      if ( npcBot:DistanceFromSecretShop() <= 100 ) then
+      if ( npcBot:DistanceFromSecretShop() <= distanceBuyShop ) then
         ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy );
       end
     end
@@ -94,33 +95,45 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
     flashMessage = false;
   end
 
-  if ( npcBot:GetGold() >= GetItemCost( 'item_tpscroll' ) ) then
-    --[[ buy at least one scroll from shop
-    for i=0,5 do
-      local tempItemSlot = npcBot:GetItemInSlot( i );
-      if ( tempItemSlot ) then
-        print( "Slot " .. i .. " is occupied ");
-        print(#tempItemSlot);
-        for k,v in ipairs(tempItemSlot) do
-          print(k,v)
-        end
-        -- if item is scroll, then break
-      else
-        print( "Slot " .. i .. " is empty ");
-      end
-    end
-    -- if no scrolls then
-    -- ItemPurchaseBot( npcBot, 'item_tpscroll', nil );
-    -- end
-    --]]
-  end
+  BuyTPScroll( npcBot, 2 );
+end
+
+-- this code is from nostrademous
+-- http://dev.dota2.com/showthread.php?t=275015
+function BuyTPScroll(npcBot, count)
+	count = count or 1;
+	local iScrollCount = 0;
+
+	for i=0,8 do
+		local sCurItem = npcBot:GetItemInSlot( i );
+		if ( sCurItem ~= nil ) then
+			local iName = sCurItem:GetName();
+			if ( iName == "item_tpscroll" ) then
+				iScrollCount = iScrollCount + 1;
+			elseif ( iName == "item_travel_boots_1" or iName == "item_travel_boots_2" ) then
+				return; --we are done, no need to check further
+			end
+		end
+	end
+
+	-- If we are at the sideshop or fountain with no TPs, then buy up to count
+	if ( (npcBot:DistanceFromSideShop() <= distanceBuyShop or npcBot:DistanceFromFountain() <= distanceBuyShop)
+        and iScrollCount < count and DotaTime() > 0) then
+		for i=1,(count-iScrollCount) do
+			if ( npcBot:GetGold() >= GetItemCost( "item_tpscroll" ) ) then
+        print ( DotaTime() .. ' ' .. npcBot:GetUnitName() .. ' ' .. iScrollCount .. ' / ' .. count )
+				ItemPurchaseBot( npcBot, "item_tpscroll", nil );
+				iScrollCount = iScrollCount + 1;
+			end
+		end
+	end
 end
 
 function ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy)
   npcBot:Action_PurchaseItem( sNextItem );
   print( npcBot:GetUnitName() .. ' buys ' .. sNextItem );
 
-  if ( tableItemsToBuy ) then
+  if ( tableItemsToBuy ~= nil ) then
     table.remove( tableItemsToBuy, 1 );
   end
 

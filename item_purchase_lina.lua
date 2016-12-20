@@ -30,6 +30,7 @@ pcall(require, "bots/utility/item_purchase" )
 
 function ItemPurchaseThink()
         ItemPurchaseGenericThink(tableItemsToBuy);
+				--print (DotaTime());
 end
 
 ----------------------------------------------------------------------------------------------------

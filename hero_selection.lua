@@ -8,7 +8,7 @@ function Think()
 	if ( GetTeam() == TEAM_RADIANT )
 	then
 		print( "selecting radiant" );
-		--SelectHero( 0, "npc_dota_hero_bounty_hunter" );
+		--SelectHero( 0, "npc_dota_hero_warlock" );
 		SelectHero( 1, "npc_dota_hero_axe" );
 		SelectHero( 2, "npc_dota_hero_luna" );
 		SelectHero( 3, "npc_dota_hero_lina" );
