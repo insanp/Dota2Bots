@@ -14,14 +14,16 @@ local tableItemsToBuy = {
 				"item_staff_of_wizardry",
 				"item_ogre_axe",
 				"item_blade_of_alacrity",
+        "sell;item_tango",
+        "sell;item_clarity",
+        "sell;item_ring_of_basilius",
 				"item_reaver",
 				"item_mithril_hammer",
 				"item_blade_of_alacrity",
 				"item_boots_of_elves",
 				"item_recipe_yasha",
-				"item_reaver",
-				"item_mithril_hammer",
 				"item_ultimate_orb",
+        "sell;item_magic_wand",
 				"item_recipe_manta",
 			};
 

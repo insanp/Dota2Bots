@@ -20,16 +20,11 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
 
   local sNextItem = tableItemsToBuy[1];
 
-  --[[ if (string.find( sNextItem, "sell")) then
+  if (string.find( sNextItem, "sell")) then
     local _, sellItem = sNextItem:match("([^,]+);([^,]+)");
-    if ( npcBot:DistanceFromSideShop() <= 300 or
-         npcBot:DistanceFromSecretShop() <= 100 or
-         npcBot:DistanceFromFountain() <= 300) then
-           ItemSellBot( npcBot, sellItem, tableItemsToBuy );
-    end
+    ItemSellBot( npcBot, sellItem, tableItemsToBuy );
     return;
   end
-  ]]
 
   npcBot:SetNextItemPurchaseValue( GetItemCost( sNextItem ) );
 
@@ -46,7 +41,7 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
       flashMessage = false;
     end
 
-    if ( IsItemPurchasedFromSideShop( sNextItem ) ) then
+    if ( IsItemPurchasedFromSideShop( sNextItem ) and DecidedToBuyToSideSecret( npcBot ) ) then
       -- this item can be bought from side shop
       if ( npcBot:DistanceFromSideShop() <= sideShopThreshold ) then
         -- there is a side shop nearby, do not buy item yet
@@ -73,11 +68,12 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
       flashMessage = false;
     end
 
-    if ( IsItemPurchasedFromSecretShop( sNextItem ) and npcBot:DistanceFromSecretShop() <= secretShopThreshold ) then
+    if ( IsItemPurchasedFromSecretShop( sNextItem ) and npcBot:DistanceFromSecretShop() <= secretShopThreshold
+          and DecidedToBuyToSideSecret( npcBot ) ) then
       -- this item is from secret shop
-      if ( GetTeam() == TEAM_RADIANT ) then
+      if ( GetTeam() == TEAM_RADIANT and loc.x < 0) then
         npcBot:Action_MoveToLocation(secretShopLocationRadiant);
-      else
+      elseif ( GetTeam() == TEAM_DIRE and loc.x > 0) then
         npcBot:Action_MoveToLocation(secretShopLocationDire);
       end
       if ( npcBot:DistanceFromSecretShop() <= distanceBuyShop ) then
@@ -101,32 +97,39 @@ end
 -- this code is from nostrademous
 -- http://dev.dota2.com/showthread.php?t=275015
 function BuyTPScroll(npcBot, count)
-	count = count or 1;
-	local iScrollCount = 0;
+  count = 1; -- override count until there is a way to find out how many in possessions
+  local iScrollCount = 0;
+  local iPossession = 0;
 
-	for i=0,8 do
-		local sCurItem = npcBot:GetItemInSlot( i );
-		if ( sCurItem ~= nil ) then
-			local iName = sCurItem:GetName();
-			if ( iName == "item_tpscroll" ) then
-				iScrollCount = iScrollCount + 1;
-			elseif ( iName == "item_travel_boots_1" or iName == "item_travel_boots_2" ) then
-				return; --we are done, no need to check further
-			end
-		end
-	end
 
-	-- If we are at the sideshop or fountain with no TPs, then buy up to count
-	if ( (npcBot:DistanceFromSideShop() <= distanceBuyShop or npcBot:DistanceFromFountain() <= distanceBuyShop)
-        and iScrollCount < count and DotaTime() > 0) then
-		for i=1,(count-iScrollCount) do
-			if ( npcBot:GetGold() >= GetItemCost( "item_tpscroll" ) ) then
-        print ( DotaTime() .. ' ' .. npcBot:GetUnitName() .. ' ' .. iScrollCount .. ' / ' .. count )
-				ItemPurchaseBot( npcBot, "item_tpscroll", nil );
-				iScrollCount = iScrollCount + 1;
-			end
-		end
-	end
+  -- checks scrolls or boots
+  for i=0,5 do
+    local sCurItem = npcBot:GetItemInSlot( i );
+    if ( sCurItem ~= nil ) then
+      iPossession = iPossession + 1;
+      local iName = sCurItem:GetName();
+      if ( iName == "item_tpscroll" ) then -- only check type, next : number of items
+        iScrollCount = iScrollCount + 1;
+      elseif ( iName == "item_travel_boots_1" or iName == "item_travel_boots_2" ) then
+        return; --we are done, no need to check further
+      end
+    end
+  end
+
+  -- If we are at the sideshop or fountain with no TPs, then buy up to count, but only to inventory
+  if ( (npcBot:DistanceFromSideShop() <= distanceBuyShop or npcBot:DistanceFromFountain() <= distanceBuyShop)
+        and iScrollCount < count and DotaTime() > 0 and iPossession < 6) then
+    for i=1,(count-iScrollCount) do
+      if ( npcBot:GetGold() >= GetItemCost( "item_tpscroll" ) ) then
+        ItemPurchaseBot( npcBot, "item_tpscroll", nil );
+        iScrollCount = iScrollCount + 1;
+      end
+    end
+  end
+end
+
+function DecidedToBuyToSideSecret( npcBot )
+  return true; -- ( npcBot:GetActiveMode() == BOT_MODE_LANING );
 end
 
 function ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy)
@@ -140,14 +143,26 @@ function ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy)
   flashMessage = true;
 end
 
-function ItemSellBot( npcBot, sNextItem, tableItemsToBuy )
-  --[[ npcBot:Action_SellItem( sNextItem );
-  print( npcBot:GetUnitName() .. ' sells ' .. sNextItem );
+function ItemSellBot( npcBot, sellItem, tableItemsToBuy )
+  if ( npcBot:DistanceFromSideShop() <= distanceBuyShop or
+       npcBot:DistanceFromSecretShop() <= distanceBuyShop or
+       npcBot:DistanceFromFountain() <= distanceBuyShop ) then
+    for i=0,5 do
+      local sCurItem = npcBot:GetItemInSlot( i );
+      if ( sCurItem ~= nil ) then
+        local iName = sCurItem:GetName();
+        if ( iName == sellItem ) then
+          -- item exists! must be sold
+          npcBot:Action_SellItem( sCurItem );
+          print( npcBot:GetUnitName() .. ' sells ' .. sellItem );
+        end
+      end
+    end
 
-  if ( tableItemsToBuy ) then
-    table.remove( tableItemsToBuy, 1 );
+    -- exist or not, move on to next item build
+    if ( tableItemsToBuy ~= nil ) then
+      table.remove( tableItemsToBuy, 1 );
+    end
+    flashMessage = true;
   end
-
-  flashMessage = true;
-  ]]
 end

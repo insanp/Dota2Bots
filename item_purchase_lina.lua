@@ -11,6 +11,8 @@ local tableItemsToBuy = {
 				"item_void_stone",
 				"item_staff_of_wizardry",
 				"item_ring_of_regen",
+        "sell;item_tango",
+        "sell;item_clarity",
 				"item_recipe_force_staff",
 				"item_ultimate_orb",
 				"item_mystic_staff",
@@ -21,6 +23,7 @@ local tableItemsToBuy = {
 				"item_void_stone",
 				"item_staff_of_wizardry",
 				"item_wind_lace",
+        "sell;item_magic_wand",
 				"item_recipe_cyclone",
 			};
 
@@ -30,7 +33,6 @@ pcall(require, "bots/utility/item_purchase" )
 
 function ItemPurchaseThink()
         ItemPurchaseGenericThink(tableItemsToBuy);
-				--print (DotaTime());
 end
 
 ----------------------------------------------------------------------------------------------------
