@@ -25,6 +25,7 @@ local tableItemsToBuy = {
   "item_wind_lace",
   "sell;item_magic_wand",
   "item_recipe_cyclone",
+  "item_guardian_greaves"
 };
 
 pcall(require, "bots/utility/item_purchase" )

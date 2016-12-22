@@ -25,6 +25,9 @@ local tableItemsToBuy = {
   "item_ultimate_orb",
   "sell;item_magic_wand",
   "item_recipe_manta",
+  "item_ogre_axe",
+  "item_mithril_hammer",
+  "item_recipe_black_king_bar"
 };
 
 pcall(require, "bots/utility/item_purchase" )

@@ -1,5 +1,5 @@
 _G._savedEnv = getfenv()
-module( "mode_secret_shop_generic", package.seeall )
+module( "mode_side_shop_generic", package.seeall )
 
 ----------------------------------------------------------------------------------------------------
 --[[
@@ -24,7 +24,7 @@ end
 function GetDesire()
   local npcBot = GetBot();
   local desire = BOT_MODE_DESIRE_NONE;
-  if ( npcBot.secretShopMode == true ) then
+  if ( npcBot.sideShopMode == true ) then
     desire = BOT_MODE_DESIRE_MODERATE;
   end
 
@@ -32,4 +32,4 @@ function GetDesire()
 end
 
 ----------------------------------------------------------------------------------------------------
-for k,v in pairs( mode_secret_shop_generic ) do _G._savedEnv[k] = v end
+for k,v in pairs( mode_side_shop_generic ) do _G._savedEnv[k] = v end

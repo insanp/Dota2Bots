@@ -1,12 +1,9 @@
 local flashMessage = true;
 local sideShopThreshold = 4000;
-local secretShopThreshold = 4000;
 local distanceBuyShop = 300;
 
 local sideShopLocationTop = Vector(-7000, 4500);
 local sideShopLocationBot = Vector(7000, -4500);
-local secretShopLocationRadiant = Vector(-4800, 900);
-local secretShopLocationDire = Vector(4700, -1900);
 
 function ItemPurchaseGenericThink(tableItemsToBuy)
   local npcBot = GetBot();
@@ -14,6 +11,8 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
 
   if ( tableItemsToBuy == 0 )
   then
+    npcBot.sideShopMode = false;
+    npcBot.secretShopMode = false;
     npcBot:SetNextItemPurchaseValue( 0 );
     return;
   end
@@ -45,7 +44,7 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
       flashMessage = false;
     end
 
-    if ( IsItemPurchasedFromSideShop( sNextItem ) and DecidedToBuyToSideSecret( npcBot ) ) then
+    if ( IsItemPurchasedFromSideShop( sNextItem ) ) then
       -- this item can be bought from side shop
       if ( npcBot:DistanceFromSideShop() <= sideShopThreshold ) then
         -- there is a side shop nearby, do not buy item yet
@@ -57,9 +56,13 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
           else
             npcBot:Action_MoveToLocation(sideShopLocationBot);
           end
+          --npcBot.sideShopMode = true;
           if ( npcBot:DistanceFromSideShop() <= distanceBuyShop ) then
             ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy );
+            --npcBot.sideShopMode = false;
           end
+        else
+            --npcBot.sideShopMode = false;
         end
         flashMessage = true;
         return;
@@ -72,7 +75,7 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
       flashMessage = false;
     end
 
-    if ( IsItemPurchasedFromSecretShop( sNextItem ) and npcBot:DistanceFromSecretShop() <= secretShopThreshold ) then
+    if ( IsItemPurchasedFromSecretShop( sNextItem ) ) then
       -- this item is from secret shop
       npcBot.secretShopMode = true;
 
@@ -102,7 +105,6 @@ function BuyTPScroll(npcBot, count)
   local iScrollCount = 0;
   local iPossession = 0;
 
-
   -- checks scrolls or boots
   for i=0,14 do
     local sCurItem = npcBot:GetItemInSlot( i );
@@ -127,10 +129,6 @@ function BuyTPScroll(npcBot, count)
       end
     end
   end
-end
-
-function DecidedToBuyToSideSecret( npcBot )
-  return true; -- ( npcBot:GetActiveMode() == BOT_MODE_LANING );
 end
 
 function ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy)

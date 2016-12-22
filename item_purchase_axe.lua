@@ -23,7 +23,14 @@ local tableItemsToBuy = {
   "sell;item_tranquil_boots",
   "item_boots",
   "sell:item_tpscroll",
-  "item_recipe_travel_boots"
+  "item_recipe_travel_boots",
+  "item_ring_of_regen",
+  "item_sobi_mask",
+  "item_recipe_soul_ring",
+  "item_point_booster",
+  "item_vitality_booster",
+  "item_energy_booster",
+  "item_recipe_bloodstone"
 };
 
 pcall(require, "bots/utility/item_purchase" )
