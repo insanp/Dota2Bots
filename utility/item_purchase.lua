@@ -20,6 +20,10 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
 
   local sNextItem = tableItemsToBuy[1];
 
+  if (sNextItem == nil) then
+    return;
+  end
+
   if (string.find( sNextItem, "sell")) then
     local _, sellItem = sNextItem:match("([^,]+);([^,]+)");
     ItemSellBot( npcBot, sellItem, tableItemsToBuy );
@@ -68,16 +72,13 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
       flashMessage = false;
     end
 
-    if ( IsItemPurchasedFromSecretShop( sNextItem ) and npcBot:DistanceFromSecretShop() <= secretShopThreshold
-          and DecidedToBuyToSideSecret( npcBot ) ) then
+    if ( IsItemPurchasedFromSecretShop( sNextItem ) and npcBot:DistanceFromSecretShop() <= secretShopThreshold ) then
       -- this item is from secret shop
-      if ( GetTeam() == TEAM_RADIANT and loc.x < 0) then
-        npcBot:Action_MoveToLocation(secretShopLocationRadiant);
-      elseif ( GetTeam() == TEAM_DIRE and loc.x > 0) then
-        npcBot:Action_MoveToLocation(secretShopLocationDire);
-      end
+      npcBot.secretShopMode = true;
+
       if ( npcBot:DistanceFromSecretShop() <= distanceBuyShop ) then
         ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy );
+        npcBot.secretShopMode = false;
       end
     end
 
@@ -103,7 +104,7 @@ function BuyTPScroll(npcBot, count)
 
 
   -- checks scrolls or boots
-  for i=0,5 do
+  for i=0,14 do
     local sCurItem = npcBot:GetItemInSlot( i );
     if ( sCurItem ~= nil ) then
       iPossession = iPossession + 1;
@@ -116,7 +117,7 @@ function BuyTPScroll(npcBot, count)
     end
   end
 
-  -- If we are at the sideshop or fountain with no TPs, then buy up to count, but only to inventory
+  -- If we are at the sideshop or fountai\n with no TPs, then buy up to count, but only to inventory
   if ( (npcBot:DistanceFromSideShop() <= distanceBuyShop or npcBot:DistanceFromFountain() <= distanceBuyShop)
         and iScrollCount < count and DotaTime() > 0 and iPossession < 6) then
     for i=1,(count-iScrollCount) do
