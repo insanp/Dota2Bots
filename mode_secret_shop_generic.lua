@@ -15,7 +15,7 @@ function OnEnd()
 	--print( "mode_generic_defend_ally.OnEnd" );
 end
 
-----------------------------------------------------------------------------------------------------
+-------------------------------------------------------------\---------------------------------------
 
 function Think()
 	--print( "mode_generic_defend_ally.Think" );
@@ -29,6 +29,8 @@ function GetDesire()
   if ( npcBot.secretShopMode == true ) then
     desire = BOT_MODE_DESIRE_MODERATE;
   end
+
+  print( npcBot:GetUnitName() .. ' desire secret ' .. desire );
 
   return Clamp( desire, BOT_MODE_DESIRE_NONE, BOT_MODE_DESIRE_ABSOLUTE );
 end
