@@ -20,7 +20,12 @@ local tableItemsToBuy = {
   "item_point_booster",
   "item_staff_of_wizardry",
   "item_ogre_axe",
-  "item_blade_of_alacrity"
+  "item_blade_of_alacrity",
+  "item_mithril_hammer",
+  "item_gloves",
+  "item_recipe_maelstrom",
+  "item_hyperstone",
+  "item_recipe_mjollnir"
 };
 
 pcall(require, "bots/utility/item_purchase" )
