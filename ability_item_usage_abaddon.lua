@@ -167,7 +167,7 @@ function ConsiderAphoticShield()
   return BOT_ACTION_DESIRE_NONE, 0;
 end
 
-function ConsiderBorrowedTime( npcBot )
+function ConsiderBorrowedTime()
   if ( not abilityBT:IsFullyCastable() ) then
     return BOT_ACTION_DESIRE_NONE;
   end;

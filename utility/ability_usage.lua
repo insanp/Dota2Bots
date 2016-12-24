@@ -16,7 +16,7 @@ function abilityLevelUp( npcBot, tableAbilitiesToLearn )
     return;
   end
 
-  ability = npcBot:GetAbilityByName( sNextAbility );
+  local ability = npcBot:GetAbilityByName( sNextAbility );
   local aLevel = ability:GetLevel();
   if ( ability:CanAbilityBeUpgraded() ) then
     npcBot:Action_LevelAbility( sNextAbility );
