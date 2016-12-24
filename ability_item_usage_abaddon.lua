@@ -103,15 +103,11 @@ function ConsiderDeathCoil()
   local botMaxHealth = npcBot:GetMaxHealth();
   local botCurrentHealth = npcBot:GetHealth();
 
-  if ( abilityBT:IsActivated() ) then
+  if ( abilityBT:IsCooldownReady() and abilityBT:GetLevel() > 0 ) then
     dModifier = 0.25;
   end
 
-  if ( abilityBT:IsActivated() ) then
-    print("Borrowed time is activated");
-  end
-  -- regular death coil usage
-  if ( ( botCurrentHealth - nSelfDamage ) > nBTThreshold or abilityBT:IsActivated() ) then
+  if ( ( botCurrentHealth - nSelfDamage ) > nBTThreshold or abilityBT:IsCooldownReady() and abilityBT:GetLevel() > 0 ) then
   -- decide to damage current enemy target?
     local npcTarget = npcBot:GetTarget();
 
@@ -132,7 +128,7 @@ function ConsiderDeathCoil()
 
         if ( allyCurrentHealth < 0.5*allyMaxHealth ) then
           if ( CanCastDeathCoilOnTarget( npcAlly ) ) then
-            return BOT_ACTION_DESIRE_MODERATE + dModifier, npcAlly;
+            return BOT_ACTION_DESIRE_HIGH + dModifier, npcAlly;
           end
         end
       end

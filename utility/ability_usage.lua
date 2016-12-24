@@ -23,7 +23,7 @@ function abilityLevelUp( npcBot, tableAbilitiesToLearn )
     local aLevelResult = ability:GetLevel();
 
     if ( aLevelResult > aLevel and tableAbilitiesToLearn ~= nil ) then
-      print("learned " .. sNextAbility );
+      print( npcBot:GetUnitName() .. " has learned " .. sNextAbility );
       table.remove( tableAbilitiesToLearn, 1 );
     end
   end
