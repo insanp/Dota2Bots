@@ -38,10 +38,9 @@ local abilityBT = nil;
 local nBTThreshold = nil;
 local dModifier = 0.0;
 
+local npcBot = GetBot();
 
 function AbilityUsageThink()
-  local npcBot = GetBot();
-  local loc = npcBot:GetLocation();
   abilityDC = npcBot:GetAbilityByName( "abaddon_death_coil" );
   abilityAS = npcBot:GetAbilityByName( "abaddon_aphotic_shield" );
   abilityBT = npcBot:GetAbilityByName( "abaddon_borrowed_time" );
@@ -53,55 +52,51 @@ function AbilityUsageThink()
   abilityLevelUp( npcBot, tableAbilitiesToLearn );
 
   -- Check if we're already using an ability
-	if ( npcBot:IsUsingAbility() ) then return end;
+  if ( npcBot:IsUsingAbility() ) then return end;
 
   -- Consider using each ability
-	castDCDesire, castDCTarget = ConsiderDeathCoil( npcBot );
-	castASDesire, castASTarget = ConsiderAphoticShield( npcBot );
-	castBTDesire = ConsiderBorrowedTime( npcBot );
+  castDCDesire, castDCTarget = ConsiderDeathCoil();
+  castASDesire, castASTarget = ConsiderAphoticShield();
+  castBTDesire = ConsiderBorrowedTime();
 
-  if ( castBTDesire > BOT_ACTION_DESIRE_NONE )
-	then
-		npcBot:Action_UseAbility( abilityBT );
-		return;
-	end
+  if ( castBTDesire > BOT_ACTION_DESIRE_NONE ) then
+    npcBot:Action_UseAbility( abilityBT );
+    return;
+  end
 
-	if ( castDCDesire > BOT_ACTION_DESIRE_NONE )
-	then
-		npcBot:Action_UseAbilityOnEntity( abilityDC, castDCTarget );
-		return;
-	end
+  if ( castDCDesire > BOT_ACTION_DESIRE_NONE ) then
+    npcBot:Action_UseAbilityOnEntity( abilityDC, castDCTarget );
+    return;
+  end
 
-	if ( castASDesire > BOT_ACTION_DESIRE_NONE )
-	then
-		npcBot:Action_UseAbilityOnEntity( abilityAS, castASTarget );
-		return;
-	end
+  if ( castASDesire > BOT_ACTION_DESIRE_NONE ) then
+    npcBot:Action_UseAbilityOnEntity( abilityAS, castASTarget );
+    return;
+  end
 
 end
 
 ----------------------------------------------------------------------------------------------------
 
 function CanCastDeathCoilOnTarget( npcTarget )
-	return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
+  return npcTarget:CanBeSeen() and not npcTarget:IsMagicImmune() and not npcTarget:IsInvulnerable();
 end
 
 
 function CanCastAphoticShieldOnTarget( npcTarget )
-	return npcTarget:CanBeSeen();
+  return npcTarget:CanBeSeen();
 end
 
 ----------------------------------------------------------------------------------------------------
 
-function ConsiderDeathCoil( npcBot )
-  if ( not abilityDC:IsFullyCastable() )
-	then
-		return BOT_ACTION_DESIRE_NONE, 0;
-	end;
+function ConsiderDeathCoil()
+  if ( not abilityDC:IsFullyCastable() ) then
+    return BOT_ACTION_DESIRE_NONE, 0;
+  end;
 
   -- Get some of its values
-	local nCastRange = abilityDC:GetCastRange();
-	local nSelfDamage = abilityDC:GetSpecialValueInt( "self_damage" );
+  local nCastRange = abilityDC:GetCastRange();
+  local nSelfDamage = abilityDC:GetSpecialValueInt( "self_damage" );
   local nTargetDamage = abilityDC:GetSpecialValueInt( "target_damage" );
   local nHealAmount = abilityDC:GetSpecialValueInt( "heal_amount" );
 
@@ -112,18 +107,21 @@ function ConsiderDeathCoil( npcBot )
     dModifier = 0.25;
   end
 
+  if ( abilityBT:IsActivated() ) then
+    print("Borrowed time is activated");
+  end
   -- regular death coil usage
-  if ( ( botCurrentHealth - nSelfDamage ) > nBTThreshold ) then
-    -- decide to damage current enemy target?
+  if ( ( botCurrentHealth - nSelfDamage ) > nBTThreshold or abilityBT:IsActivated() ) then
+  -- decide to damage current enemy target?
     local npcTarget = npcBot:GetTarget();
 
-		if ( npcTarget ~= nil ) then
-			if ( CanCastDeathCoilOnTarget( npcTarget )
-          and GetUnitToUnitDistance( npcBot, npcTarget ) > 200 ) then
+    if ( npcTarget ~= nil ) then
+      if ( CanCastDeathCoilOnTarget( npcTarget )
+        and GetUnitToUnitDistance( npcBot, npcTarget ) > 200 ) then
 
-				return BOT_ACTION_DESIRE_MODERATE + dModifier, npcTarget;
-			end
-		end
+        return BOT_ACTION_DESIRE_MODERATE + dModifier, npcTarget;
+      end
+    end
 
     -- decide to heal nearby ally?
     local tableNearbyAllyHeroes = npcBot:GetNearbyHeroes( nCastRange, false, BOT_MODE_NONE );
@@ -134,19 +132,9 @@ function ConsiderDeathCoil( npcBot )
 
         if ( allyCurrentHealth < 0.5*allyMaxHealth ) then
           if ( CanCastDeathCoilOnTarget( npcAlly ) ) then
-    				return BOT_ACTION_DESIRE_MODERATE + dModifier, npcAlly;
-    			end
+            return BOT_ACTION_DESIRE_MODERATE + dModifier, npcAlly;
+          end
         end
-      end
-    end
-  end
-
-  -- ultimate is active, spam death coil to target
-  if ( abilityBT:IsActivated() ) then
-    local tableNearbyEnemyHeroes = npcBot:GetNearbyHeroes( nCastRange, true, BOT_MODE_NONE );
-    for _,npcEnemy in pairs( tableNearbyEnemyHeroes ) do
-      if ( CanCastDeathCoilOnTarget( npcEnemy ) ) then
-        return BOT_ACTION_DESIRE_MODERATE + dModifier, npcEnemy;
       end
     end
   end
@@ -154,11 +142,10 @@ function ConsiderDeathCoil( npcBot )
   return BOT_ACTION_DESIRE_NONE, 0;
 end
 
-function ConsiderAphoticShield( npcBot )
-  if ( not abilityAS:IsFullyCastable() )
-	then
-		return BOT_ACTION_DESIRE_NONE, 0;
-	end;
+function ConsiderAphoticShield()
+  if ( not abilityAS:IsFullyCastable() ) then
+    return BOT_ACTION_DESIRE_NONE, 0;
+  end;
 
   if ( abilityBT:IsActivated() ) then
     dModifier = 0.25;
@@ -173,10 +160,10 @@ function ConsiderAphoticShield( npcBot )
       if ( npcAlly:WasRecentlyDamagedByAnyHero(1.0) ) then
         return BOT_ACTION_DESIRE_MODERATE + dModifier, npcAlly;
       elseif ( npcAlly:IsBlind() or npcAlly:IsChanneling()
-              or npcAlly:IsDisarmed() or npcAlly:IsHexed()
-              or npcAlly:IsRooted() or npcAlly:IsMuted()
-              or npcAlly:IsSilenced() or npcAlly:IsStunned()) then
-        return BOT_ACTION_DESIRE_HIGH + dModifier, npcAlly;
+        or npcAlly:IsDisarmed() or npcAlly:IsHexed()
+        or npcAlly:IsRooted() or npcAlly:IsMuted()
+        or npcAlly:IsSilenced() or npcAlly:IsStunned()) then
+          return BOT_ACTION_DESIRE_HIGH + dModifier, npcAlly;
       end
     end
   end
@@ -185,10 +172,9 @@ function ConsiderAphoticShield( npcBot )
 end
 
 function ConsiderBorrowedTime( npcBot )
-  if ( not abilityBT:IsFullyCastable() )
-	then
-		return BOT_ACTION_DESIRE_NONE;
-	end;
+  if ( not abilityBT:IsFullyCastable() ) then
+    return BOT_ACTION_DESIRE_NONE;
+  end;
 
   return BOT_ACTION_DESIRE_NONE, 0;
 end
