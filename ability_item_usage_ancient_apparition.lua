@@ -85,13 +85,13 @@ function AbilityUsageThink()
     return;
   end
 
-  if ( castIVDesire > BOT_ACTION_DESIRE_NONE ) then
-    npcBot:Action_UseAbilityOnLocation( abilityIV, castIVLocation );
+  if ( castCFDesire > BOT_ACTION_DESIRE_NONE ) then
+    npcBot:Action_UseAbilityOnEntity( abilityCF, castCFTarget );
     return;
   end
 
-  if ( castCFDesire > BOT_ACTION_DESIRE_NONE ) then
-    npcBot:Action_UseAbilityOnEntity( abilityCF, castCFTarget );
+  if ( castIVDesire > BOT_ACTION_DESIRE_NONE ) then
+    npcBot:Action_UseAbilityOnLocation( abilityIV, castIVLocation );
     return;
   end
 
@@ -141,7 +141,7 @@ function ConsiderColdFeet()
   for _,npcEnemy in pairs( tableNearbyEnemyHeroes ) do
     if ( CanCastColdFeetOnTarget( npcEnemy ) ) then
       if ( npcEnemy:IsRooted() or npcEnemy:IsHexed() or npcEnemy:IsStunned()
-        or npcEnemy:GetBaseMovementSpeed() < 250 ) then
+        or npcEnemy:GetBaseMovementSpeed() <= 250 ) then
         return BOT_ACTION_DESIRE_HIGH + dModifier, npcEnemy;
       end
     end
@@ -156,15 +156,28 @@ function ConsiderIceVortex()
   end;
 
   local nCastRange = abilityIV:GetCastRange();
+  -- decide to damage current enemy target?
+  local npcTarget = npcBot:GetTarget();
+
+  if ( npcTarget ~= nil and npcTarget:IsHero() ) then
+    if ( CanCastIceVortexOnTarget( npcTarget )
+      and GetUnitToUnitDistance( npcBot, npcTarget ) <= nCastRange ) then
+
+      return BOT_ACTION_DESIRE_MODERATE + dModifier, npcTarget:GetLocation();
+    end
+  end
 
   local tableNearbyEnemyHeroes = npcBot:GetNearbyHeroes( nCastRange, true, BOT_MODE_NONE );
   for _,npcEnemy in pairs( tableNearbyEnemyHeroes ) do
     if ( CanCastIceVortexOnTarget( npcEnemy ) ) then
-      if ( npcEnemy:GetActiveMode() == BOT_MODE_RETREAT ) then
+      if ( npcEnemy:IsRooted() or npcEnemy:IsHexed() or npcEnemy:IsStunned()
+        or npcEnemy:GetBaseMovementSpeed() >= 400
+        or ( npcBot:GetActiveMode() == BOT_MODE_RETREAT and npcBot:GetActiveModeDesire() >= BOT_MODE_DESIRE_HIGH )) then
         return BOT_ACTION_DESIRE_HIGH + dModifier, npcEnemy:GetLocation();
       end
     end
   end
+
 
   return BOT_ACTION_DESIRE_NONE, 0;
 end
