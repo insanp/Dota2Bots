@@ -60,9 +60,11 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
           if ( npcBot:DistanceFromSideShop() <= distanceBuyShop ) then
             ItemPurchaseBot( npcBot, sNextItem, tableItemsToBuy );
             --npcBot.sideShopMode = false;
+            npcBot.secretShopMode = false;
           end
         else
             --npcBot.sideShopMode = false;
+            npcBot.secretShopMode = false;
         end
         flashMessage = true;
         return;
@@ -119,10 +121,10 @@ function BuyTPScroll(npcBot, count)
     end
   end
 
-  -- If we are at the sideshop or fountai\n with no TPs, then buy up to count, but only to inventory
+  -- If we are at the sideshop or fountain with no TPs, then buy up to count, but only to inventory
   if ( (npcBot:DistanceFromSideShop() <= distanceBuyShop or npcBot:DistanceFromFountain() <= distanceBuyShop)
         and iScrollCount < count and DotaTime() > 0 and iPossession < 6) then
-    for i=1,(count-iScrollCount) do
+    for i=1,count do
       if ( npcBot:GetGold() >= GetItemCost( "item_tpscroll" ) ) then
         ItemPurchaseBot( npcBot, "item_tpscroll", nil );
         iScrollCount = iScrollCount + 1;

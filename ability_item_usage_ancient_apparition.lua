@@ -141,7 +141,7 @@ function ConsiderColdFeet()
   for _,npcEnemy in pairs( tableNearbyEnemyHeroes ) do
     if ( CanCastColdFeetOnTarget( npcEnemy ) ) then
       if ( npcEnemy:IsRooted() or npcEnemy:IsHexed() or npcEnemy:IsStunned()
-        or npcEnemy:GetBaseMovementSpeed() <= 250 ) then
+        or npcEnemy:GetCurrentMovementSpeed() <= 250 ) then
         return BOT_ACTION_DESIRE_HIGH + dModifier, npcEnemy;
       end
     end
@@ -156,7 +156,7 @@ function ConsiderIceVortex()
   end;
 
   local nCastRange = abilityIV:GetCastRange();
-  -- decide to damage current enemy target?
+  -- decide to slow and weaken current enemy target?
   local npcTarget = npcBot:GetTarget();
 
   if ( npcTarget ~= nil and npcTarget:IsHero() ) then
