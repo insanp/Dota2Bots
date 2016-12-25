@@ -12,6 +12,7 @@ function abilityLevelUp( npcBot, tableAbilitiesToLearn )
 
   -- skip talent abilites, still not working
   if ( string.find( sNextAbility, "special") and tableAbilitiesToLearn ~= nil ) then
+    npcBot:Action_LevelAbility( sNextAbility );
     table.remove( tableAbilitiesToLearn, 1 );
     return;
   end

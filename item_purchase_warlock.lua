@@ -10,7 +10,7 @@ local tableItemsToBuy = {
 				"item_sobi_mask",
 				"item_boots",
 				"item_energy_booster",
-				"item_arcane_boots",
+				"sell;item_tango",
 				"item_point_booster",
 				"item_staff_of_wizardry",
 				"item_ogre_axe",
