@@ -90,7 +90,7 @@ function ConsiderBlink()
       else
         loc = retreatBlinkDire;
       end
-      print(loc);
+
       return BOT_ACTION_DESIRE_HIGH, loc;
     end
   end
@@ -123,7 +123,7 @@ function ConsiderManaVoid()
       local enemyMaxMana = npcEnemy:GetMaxMana();
       local enemyMana = npcEnemy:GetMana();
       local estimatedDamage = ( enemyMaxMana - enemyMana ) * nVoidDamageRatio;
-      print("Estimated mana void on " .. npcEnemy:GetUnitName() .. " is " .. estimatedDamage);
+
       if ( estimatedDamage * 0.75 >= enemyHealth ) then
         -- aim for a kill
         return BOT_ACTION_DESIRE_HIGH, npcEnemy;
