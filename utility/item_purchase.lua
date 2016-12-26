@@ -94,6 +94,8 @@ function ItemPurchaseGenericThink(tableItemsToBuy)
 
     flashMessage = false;
   else
+    npcBot.secretShopMode = false;
+    npcBot.sideShopMode = false;
     flashMessage = false;
   end
 
@@ -103,7 +105,7 @@ end
 -- this code is from nostrademous
 -- http://dev.dota2.com/showthread.php?t=275015
 function BuyTPScroll(npcBot, count)
-  count = 1; -- override count until there is a way to find out how many in possessions
+  count = count; -- override count until there is a way to find out how many in possessions
   local iScrollCount = 0;
   local iPossession = 0;
 
@@ -123,7 +125,7 @@ function BuyTPScroll(npcBot, count)
 
   -- If we are at the sideshop or fountain with no TPs, then buy up to count, but only to inventory
   if ( (npcBot:DistanceFromSideShop() <= distanceBuyShop or npcBot:DistanceFromFountain() <= distanceBuyShop)
-        and iScrollCount < count and DotaTime() > 0 and iPossession < 6) then
+        and iScrollCount == 0 and DotaTime() > 0 and iPossession < 6) then
     for i=1,count do
       if ( npcBot:GetGold() >= GetItemCost( "item_tpscroll" ) ) then
         ItemPurchaseBot( npcBot, "item_tpscroll", nil );

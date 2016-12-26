@@ -141,7 +141,7 @@ function ConsiderMagneticField()
   -- create magnetic field near ally tower
   local tableNearbyAllyTowers = npcBot:GetNearbyTowers( nCastRange, false );
   for _,npcAlly in pairs( tableNearbyAllyTowers ) do
-    if ( CanCastFluxOnTarget (npcAlly) and npcAlly:WasRecentlyDamagedByAnyHero(1.0) ) then
+    if ( npcAlly:WasRecentlyDamagedByAnyHero(1.0) ) then
       return BOT_ACTION_DESIRE_MODERATE, npcAlly:GetLocation();
     end
   end
@@ -180,4 +180,9 @@ function ConsiderTempestDouble()
   end
 
   return BOT_ACTION_DESIRE_NONE, 0;
+end
+
+function BuybackUsageThink()
+  -- do not buyback... tempest double is buggy and it buybacks over and over...
+  return;
 end
