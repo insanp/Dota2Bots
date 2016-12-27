@@ -4,7 +4,7 @@ Bots for Dota 2 Explorations
 Usage : clone this git under folder /Users/username/Library/Application Support/Steam/steamapps/common/dota 2 beta/game/dota/scripts/vscripts/bots
 
 The additional playable bots currently implemented are :
-Abaddon, Alchemist, Ancient Apparition, Antimage, Arc Warden.
+Abaddon, Alchemist, Ancient Apparition, Antimage, Arc Warden, Bat Rider.
 This list of bots will expand alphabetically.
 
 The default bots implemented are :

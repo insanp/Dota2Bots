@@ -107,7 +107,9 @@ function ConsiderDeathCoil()
     dModifier = 0.25;
   end
 
-  if ( ( botCurrentHealth - nSelfDamage ) > nBTThreshold or abilityBT:IsCooldownReady() and abilityBT:GetLevel() > 0 ) then
+  if ( ( botCurrentHealth - nSelfDamage ) > nBTThreshold
+          or npcBot:HasModifier('modifier_abaddon_borrowed_time')
+          or npcBot:HasModifier('modifier_abaddon_aphotic_shield') ) then
   -- decide to damage current enemy target?
     local npcTarget = npcBot:GetTarget();
 
