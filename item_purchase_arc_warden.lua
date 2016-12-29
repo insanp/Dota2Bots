@@ -17,6 +17,13 @@ local tableItemsToBuy = {
   "item_recipe_force_staff",
 
   "item_staff_of_wizardry",
+  "item_belt_of_strength",
+  "item_recipe_necronomicon",
+  "item_recipe_necronomicon",
+  "item_recipe_necronomicon",
+
+  "sell;item_magic_wand",
+  "item_staff_of_wizardry",
   "item_circlet",
   "item_mantle",
   "item_recipe_null_talisman",
@@ -25,13 +32,6 @@ local tableItemsToBuy = {
   "item_recipe_dagon",
   "item_recipe_dagon",
   "item_recipe_dagon",
-
-  "sell;item_magic_wand",
-  "item_staff_of_wizardry",
-  "item_belt_of_strength",
-  "item_recipe_necronomicon",
-  "item_recipe_necronomicon",
-  "item_recipe_necronomicon",
 
   "item_ghost",
   "sell:item_tpscroll",

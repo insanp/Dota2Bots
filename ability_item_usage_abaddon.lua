@@ -113,7 +113,7 @@ function ConsiderDeathCoil()
   -- decide to damage current enemy target?
     local npcTarget = npcBot:GetTarget();
 
-    if ( npcTarget ~= nil ) then
+    if ( npcTarget ~= nil and npcTarget:IsHero() ) then
       if ( CanCastDeathCoilOnTarget( npcTarget )
         and GetUnitToUnitDistance( npcBot, npcTarget ) > 200 ) then
 
