@@ -3,6 +3,7 @@ local direLocation = Vector(7000, 7000);
 
 function Think()
   local npcBot = GetBot();
+  print("bot brew earth");
   if ( GetTeam() == TEAM_RADIANT ) then
     npcBot:Action_AttackMove( radiantLocation );
   else

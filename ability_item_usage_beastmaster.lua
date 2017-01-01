@@ -39,6 +39,9 @@ local abilityCOTWB = nil;
 local abilityPR = nil;
 local dModifier = 0.0;
 
+local vRadiant = Vector(-7000, -7000);
+local vDire = Vector(7000, 7000);
+
 local npcBot = GetBot();
 
 function AbilityUsageThink()
@@ -132,12 +135,16 @@ function ConsiderCallOfTheWild()
 end
 
 function ConsiderCallOfTheWildBoar()
+  -- BoarThink();
   if ( not abilityCOTWB:IsFullyCastable() ) then
     return BOT_ACTION_DESIRE_NONE;
   end;
 
   -- always use!
-  return BOT_ACTION_DESIRE_MODERATE;
+  -- return BOT_ACTION_DESIRE_MODERATE;
+
+  -- deactivate
+  return BOT_ACTION_DESIRE_NONE;
 end
 
 function ConsiderPrimalRoar()
@@ -166,8 +173,37 @@ function ConsiderPrimalRoar()
       if ( npcEnemy:GetHealth() <= 0.5 * npcEnemy:GetMaxHealth() ) then
         return BOT_ACTION_DESIRE_MODERATE, npcEnemy;
       end
+
+      -- retreat!
+      if ( npcBot:GetHealth() <= 0.25 * npcBot:GetMaxHealth() ) then
+        return BOT_ACTION_DESIRE_HIGH, npcEnemy;
+      end
     end
   end
 
   return BOT_ACTION_DESIRE_NONE, 0;
+end
+
+function BoarThink()
+  local npcTarget = npcBot:GetTarget();
+  local tableNearbyAllyCreeps = npcBot:GetNearbyCreeps( 600, false );
+  for _,npcAlly in pairs( tableNearbyAllyCreeps ) do
+    local unitName = npcAlly:GetUnitName();
+    if (string.find( unitName, "beastmaster_boar")) then
+      -- does bot has target? then attack the same
+
+      if ( npcTarget ~= nil and npcTarget:IsHero() ) then
+        --print(npcAlly:GetUnitName() .. ' attacks ' .. npcTarget:GetUnitName() );
+        npcAlly:GetBot():Action_AttackUnit( npcTarget, false );
+      else
+        if (GetTeam() == TEAM_RADIANT) then
+          --print( npcAlly:GetUnitName() .. ' attacks radiant' );
+          npcAlly:GetBot():Action_AttackMove(vRadiant);
+        else
+          --print( npcAlly:GetUnitName() .. ' attacks dire' );
+          npcAlly:GetBot():Action_AttackMove(vDire);
+        end
+      end
+    end
+  end
 end
